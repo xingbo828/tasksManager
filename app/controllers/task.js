@@ -10,7 +10,6 @@ var constants = require('../../config/constants'),
     ObjectId = mongoose.Types.ObjectId;
 
 
-
 //Begin of shared methods
 var _saveOrUpdateTask = function(req, res, next, cb) {
     var summary = req.body.summary,
