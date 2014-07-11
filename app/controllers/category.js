@@ -5,6 +5,8 @@ var constants = require('../../config/constants'),
     promiseCallbackHandler = require('../utils/promiseCallbackHandler'),
     Category = mongoose.model('Category'),
     ObjectId = mongoose.Types.ObjectId;
+
+
 exports.addCategory = function (req, res, next) {
     var name = req.body.name,
         parentId = req.body.parentId;
@@ -23,46 +25,42 @@ exports.addCategory = function (req, res, next) {
     }
     //Child category
     else {
-        Category
-        .update({_id: new ObjectId(parentId)}, {$push: {subCategories: newCategory}})
-        .exec()
-        .then(
-            promiseCallbackHandler.mongooseSuccess(req, next), 
-            promiseCallbackHandler.mongooseFail(next)
-        );
+        Category.update({
+            _id: new ObjectId(parentId)
+        }, {
+            $push: {
+                subCategories: newCategory
+            }
+        }).exec().then(promiseCallbackHandler.mongooseSuccess(req, next), promiseCallbackHandler.mongooseFail(next));
     }
 };
 
-//exports.updateCategory = function (req, res, next) {};
+
+
 exports.deleteCategory = function (req, res, next) {
     var id = req.params.id;
-     Category
-     .update({'subCategories._id': new ObjectId(id)}, {$pull: {'subCategories': {'_id': new ObjectId(id)}}})
-     .exec()
-     .then(function(num){
-         if(num > 0){
-             promiseCallbackHandler.mongooseSuccess(req, next)({
-                 msg: 'subCategory deleted'
-             });
-         }
-         else{
-             Category.find({'_id':new ObjectId(id)}).remove().exec().then(
-             	promiseCallbackHandler.mongooseSuccess(req, next), 
-            	promiseCallbackHandler.mongooseFail(next)
-             );
-         }
-         
-     },
-            
-            promiseCallbackHandler.mongooseFail(next)
-        );
+    Category.update({
+        'subCategories._id': new ObjectId(id)
+    }, {
+        $pull: {
+            'subCategories': {
+                '_id': new ObjectId(id)
+            }
+        }
+    }).exec().then(function (num) {
+        if(num > 0) {
+            promiseCallbackHandler.mongooseSuccess(req, next)({
+                msg: 'subCategory deleted'
+            });
+        } else {
+            Category.find({
+                '_id': new ObjectId(id)
+            }).remove().exec().then(promiseCallbackHandler.mongooseSuccess(req, next), promiseCallbackHandler.mongooseFail(next));
+        }
+    }, promiseCallbackHandler.mongooseFail(next));
 };
+
+
 exports.getCategories = function (req, res, next) {
-    Category
-    .find()
-    .exec()
-    .then(
-		promiseCallbackHandler.mongooseSuccess(req, next), 
-		promiseCallbackHandler.mongooseFail(next)
-    );
+    Category.find().exec().then(promiseCallbackHandler.mongooseSuccess(req, next), promiseCallbackHandler.mongooseFail(next));
 };
