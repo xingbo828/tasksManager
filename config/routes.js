@@ -24,5 +24,12 @@ module.exports = function (app) {
 	app.put('/task/delivery', middleWares.ensureAuthenticated, task.updateDeliveryTask, middleWares.sendJson);
 	app.delete('/task/delivery', middleWares.ensureAuthenticated, task.deleteDeliveryTask, middleWares.sendJson);
     
-     app.get('/task/mytasks', middleWares.ensureAuthenticated, task.getMyTasks, middleWares.sendJson);
+    app.get('/task/mytasks', middleWares.ensureAuthenticated, task.getMyTasks, middleWares.sendJson);
+    
+    
+    
+    var category = require('../app/controllers/category');
+    app.post('/category', category.addCategory, middleWares.sendJson);
+    app.get('/category', middleWares.readCache, category.getCategories, middleWares.sendJson);
+    app.delete('/category/:id', category.deleteCategory, middleWares.sendJson);
 };

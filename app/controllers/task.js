@@ -12,7 +12,6 @@ var constants = require('../../config/constants'),
     
 
 
-
 //Begin of shared methods
 var _saveOrUpdateTask = function (req, res, next, taskId) {
     var summary = req.body.summary,

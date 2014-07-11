@@ -40,3 +40,4 @@ if(cluster.isMaster) {
     require('./config/errorHandlers')(app);
     app.listen(config.port);
 }
+
