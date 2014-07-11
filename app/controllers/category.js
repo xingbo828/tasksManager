@@ -1,7 +1,5 @@
 var constants = require('../../config/constants'),
     mongoose = require('mongoose'),
-    _ = require('underscore'),
-    middleWares = require('../utils/middlewares'),
     promiseCallbackHandler = require('../utils/promiseCallbackHandler'),
     Category = mongoose.model('Category'),
     ObjectId = mongoose.Types.ObjectId;
@@ -31,10 +29,14 @@ exports.addCategory = function (req, res, next) {
             $push: {
                 subCategories: newCategory
             }
-        }).exec().then(promiseCallbackHandler.mongooseSuccess(req, next), promiseCallbackHandler.mongooseFail(next));
+        })
+        .exec()
+        .then(
+            promiseCallbackHandler.mongooseSuccess(req, next), 
+            promiseCallbackHandler.mongooseFail(next)
+        );
     }
 };
-
 
 
 exports.deleteCategory = function (req, res, next) {
@@ -47,7 +49,9 @@ exports.deleteCategory = function (req, res, next) {
                 '_id': new ObjectId(id)
             }
         }
-    }).exec().then(function (num) {
+    })
+    .exec()
+    .then(function (num) {
         if(num > 0) {
             promiseCallbackHandler.mongooseSuccess(req, next)({
                 msg: 'subCategory deleted'
@@ -55,12 +59,24 @@ exports.deleteCategory = function (req, res, next) {
         } else {
             Category.find({
                 '_id': new ObjectId(id)
-            }).remove().exec().then(promiseCallbackHandler.mongooseSuccess(req, next), promiseCallbackHandler.mongooseFail(next));
+            })
+            .remove()
+            .exec()
+            .then(
+                promiseCallbackHandler.mongooseSuccess(req, next), 
+                promiseCallbackHandler.mongooseFail(next)
+            );
         }
     }, promiseCallbackHandler.mongooseFail(next));
 };
 
 
 exports.getCategories = function (req, res, next) {
-    Category.find().exec().then(promiseCallbackHandler.mongooseSuccess(req, next), promiseCallbackHandler.mongooseFail(next));
+    Category
+    .find()
+    .exec()
+    .then(
+        promiseCallbackHandler.mongooseSuccess(req, next), 
+        promiseCallbackHandler.mongooseFail(next)
+    );
 };
