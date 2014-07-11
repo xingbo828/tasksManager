@@ -16,13 +16,13 @@ module.exports = function (app) {
     app.post('/task/inperson', middleWares.ensureAuthenticated, task.addInPersonTask, middleWares.sendJson);
     app.get('/task/inperson', middleWares.readCache, task.getInPersonTasks, middleWares.sendJson);
     app.put('/task/inperson', middleWares.ensureAuthenticated, task.updateInPersonTask, middleWares.sendJson);
-	app.delete('/task/inperson', middleWares.ensureAuthenticated, task.deleteInPersonTask, middleWares.sendJson);
+	app.delete('/task/inperson/:id', middleWares.ensureAuthenticated, task.deleteInPersonTask, middleWares.sendJson);
     
     //Delivery Tasks
 	app.post('/task/delivery', middleWares.ensureAuthenticated, task.addDeliveryTask, middleWares.sendJson);
 	app.get('/task/delivery',  middleWares.readCache, task.getDeliveryTasks, middleWares.sendJson);
 	app.put('/task/delivery', middleWares.ensureAuthenticated, task.updateDeliveryTask, middleWares.sendJson);
-	app.delete('/task/delivery', middleWares.ensureAuthenticated, task.deleteDeliveryTask, middleWares.sendJson);
+	app.delete('/task/delivery/:id', middleWares.ensureAuthenticated, task.deleteDeliveryTask, middleWares.sendJson);
     
      app.get('/task/mytasks', middleWares.ensureAuthenticated, task.getMyTasks, middleWares.sendJson);
 };
