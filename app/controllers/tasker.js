@@ -49,28 +49,27 @@ exports.addTasker = function (req, res, next) {
 
 
 exports.updateTasker = function (req, res, next) {
-    _saveOrUpdateTasker(function (req, res, next, config) {
+    _saveOrUpdateTasker(req, res, next, function (config) {
         config.capableTask = req.body.capableTask;
         config.availability = req.body.availability;
-        
-        var taskerPromise;
+
         var userPromise = User.findOne({
             _id: new ObjectId(req.user._id),
             status: constants.USER_STATUS.ACTIVE
         }).exec();
         var findTasker = function (user) {
             var taskerId = user._tasker;
-            taskerPromise = Tasker.findOneAndUpdate({_id: new ObjectId(taskerId)}, config).exec();
+            return Tasker.findOneAndUpdate({_id: new ObjectId(taskerId)}, config).exec();
         };
 
-        userPromise.then(findTasker, promiseCallbackHandler.mongooseFail(next));
-        taskerPromise.then(promiseCallbackHandler.mongooseSuccess(req, next), promiseCallbackHandler.mongooseFail(next));
+        userPromise.then(findTasker, ))
+        .then(promiseCallbackHandler.mongooseSuccess(req, next), promiseCallbackHandler.mongooseFail(next));
     });
 };
 exports.deleteTasker = function (req, res, next) {
     _saveOrUpdateTasker(function (config) {
         
-        var taskerPromise;
+        var taskerPromise=new mongoose.Promise;
         var userPromise = User.findOne({
             _id: new ObjectId(req.user._id)
         }).exec();

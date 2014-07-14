@@ -35,6 +35,7 @@
     "winston-mongodb": "~0.4.5",
     "mongoose-schema-extend": "~0.1.7",
     "moment": "~2.7.0",
-    "underscore": "~1.6.0"
+    "underscore": "~1.6.0",
+    "q": "~1.0.1"
   }
 }
