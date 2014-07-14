@@ -42,13 +42,17 @@ var UserSchema = new Schema({
     loginHistory: {
         type: Array
     },
-    active :{
-        type: Boolean
-	},
+
     _tasker: {
         type: Schema.Types.ObjectId,
         ref: 'Tasker'
     },
+
+    status: {
+        type: Number,
+        default: constants.USER_STATUS.ACTIVE
+    }
+
 });
 UserSchema.pre('save', function (next) {
     var user = this;
