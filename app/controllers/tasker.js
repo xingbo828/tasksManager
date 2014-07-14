@@ -49,7 +49,7 @@ exports.addTasker = function (req, res, next) {
 
 
 exports.updateTasker = function (req, res, next) {
-    _saveOrUpdateTasker(function (config) {
+    _saveOrUpdateTasker(function (req, res, next, config) {
         config.capableTask = req.body.capableTask;
         config.availability = req.body.availability;
         
