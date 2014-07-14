@@ -67,7 +67,7 @@ exports.updateTasker = function (req, res, next) {
         };
 
 
-        userPromise()
+        userPromise
         .then(findTasker, promiseCallbackHandler.mongooseFail(next))
         .then(promiseCallbackHandler.mongooseSuccess(req, next), promiseCallbackHandler.mongooseFail(next));
     });
