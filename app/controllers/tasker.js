@@ -59,16 +59,14 @@ exports.updateTasker = function (req, res, next) {
 				_id: new ObjectId(req.user._id),
 				status: constants.USER_STATUS.ACTIVE
 			}).exec();
-
         
         var findTasker = function (user) {
             var taskerId = user._tasker;
             return Tasker.findOneAndUpdate({_id: new ObjectId(taskerId)}, config).exec();
         };
 
-
         userPromise
-        .then(findTasker, promiseCallbackHandler.mongooseFail(next))
+        .then(findTasker)
         .then(promiseCallbackHandler.mongooseSuccess(req, next), promiseCallbackHandler.mongooseFail(next));
     });
 };
@@ -86,8 +84,8 @@ exports.deleteTasker = function (req, res, next) {
         };
 
         userPromise
-        .then(findTasker, promiseCallbackHandler.mongooseFail(next))
-        .then(promiseCallbackHandler.mongooseSuccess(req, next), promiseCallbackHandler.mongooseFail(next));
+        .then(findTasker)
+        .then(promiseCallbackHandler.mongooseSuccess(req, next),promiseCallbackHandler.mongooseFail(next));
     });
 };
 exports.getTasker = function (req, res, next) {};
