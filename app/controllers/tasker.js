@@ -13,7 +13,6 @@ var constants = require('../../config/constants'),
     Tasker = mongoose.model('Tasker'),
     ObjectId = mongoose.Types.ObjectId;
 var _saveOrUpdateTasker = function (req, res, next, cb) {
-    isNewTasker = isNewTasker || false;
     var config = (function () {
         var temp = {
             city: req.body.city,
