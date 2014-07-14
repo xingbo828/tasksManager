@@ -1,6 +1,6 @@
 var mongoose = require('mongoose'),
-    extend = require('mongoose-schema-extend'),
 	constants = require('../../config/constants');
+
 var Schema = mongoose.Schema;
 
 
@@ -14,6 +14,11 @@ var TaskSchema = new Schema({
         type: String,
         required: true
     },
+    location : {
+        type: String,
+        required: true,
+        index: true
+    },
     taskDoneDate: {
         type: Date,
         required: true
@@ -22,40 +27,21 @@ var TaskSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
+    _tasker: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
     _category: {
         type: Schema.Types.ObjectId,
         ref: 'Category'
-    }
-}, {collection: 'tasks', discriminatorKey : '_type'}); 
-
-
-
-
-
-var InPersonTaskSchema = TaskSchema.extend({
-    location : {
-        type: String,
-        required: true,
-        index: true
-    } 
-});
-
-var DeliveryTaskSchema = TaskSchema.extend({
-    locationFrom : {
-        type: String,
-        required: true,
-        index: true
     },
-    locationTo : {
-        type: String,
-        required: true,
-        index: true
+    status:{
+        type: Number,
+        default: constants.TASK_STATUS.ASSIGNED
     }
-});
+}); 
 
-var DeliveryTask = mongoose.model(constants.TASK_TYPES.DELIVERY, DeliveryTaskSchema);
-var InPersonTask = mongoose.model(constants.TASK_TYPES.IN_PERSON, InPersonTaskSchema);
-var Task = mongoose.model(constants.TASK_TYPES.BASE, TaskSchema);
-exports.InPersonTask = InPersonTask;
-exports.DeliveryTask = DeliveryTask;
+
+
+var Task = mongoose.model('Task', TaskSchema);
 exports.Task = Task;

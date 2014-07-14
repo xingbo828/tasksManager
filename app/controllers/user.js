@@ -28,7 +28,6 @@ exports.add = function(req, res, next) {
         email: email,
         password: password,
         nickName: nickName,
-        userType: 'BASIC',
         active: true
     });
     newUser.save(function(err) {

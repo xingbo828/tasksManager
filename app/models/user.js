@@ -1,6 +1,8 @@
 var mongoose = require('mongoose'),
     bcrypt = require('bcrypt'),
     validators = require('../utils/validators'),
+    extend = require('mongoose-schema-extend'),
+    constants = require('../../config/constants'),
     Schema = mongoose.Schema;
 
 
@@ -33,7 +35,8 @@ var UserSchema = new Schema({
         validate: [validators.notEmpty, 'Password is empty']
     },
     userType: {
-        type: String
+        type: Number,
+        default: constants.USER_TYPE.STANDARD
     },
     loginHistory: {
         type: Array
@@ -69,7 +72,7 @@ UserSchema.methods.validPassword = function (password, cb) {
 };
 
 
-var User = mongoose.model('User', UserSchema);
+exports.User = mongoose.model('User', UserSchema);
+exports.UserSchema = UserSchema;
 
 
-module.exports = User;

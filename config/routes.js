@@ -8,20 +8,14 @@ module.exports = function (app) {
     app.delete('/session', middleWares.ensureAuthenticated, user.logout, middleWares.sendJson);
     app.delete('/user', middleWares.ensureAuthenticated, user.cancel, middleWares.sendJson);
     app.put('/user', middleWares.ensureAuthenticated, user.update, middleWares.sendJson);
+    
     var task = require('../app/controllers/task');
     //In Person Tasks
-    app.post('/task/inperson', middleWares.ensureAuthenticated, task.addInPersonTask, middleWares.sendJson);
-    app.get('/task/inperson', middleWares.readCache, task.getInPersonTasks, middleWares.sendJson);
-    app.put('/task/inperson', middleWares.ensureAuthenticated, task.updateInPersonTask, middleWares.sendJson);
-	app.delete('/task/inperson/:id', middleWares.ensureAuthenticated, task.deleteInPersonTask, middleWares.sendJson);
-    
-    //Delivery Tasks
-	app.post('/task/delivery', middleWares.ensureAuthenticated, task.addDeliveryTask, middleWares.sendJson);
-	app.get('/task/delivery',  middleWares.readCache, task.getDeliveryTasks, middleWares.sendJson);
-	app.put('/task/delivery', middleWares.ensureAuthenticated, task.updateDeliveryTask, middleWares.sendJson);
-	app.delete('/task/delivery/:id', middleWares.ensureAuthenticated, task.deleteDeliveryTask, middleWares.sendJson);
-
-    app.get('/task/mytasks', middleWares.ensureAuthenticated, task.getMyTasks, middleWares.sendJson);
+    app.post('/task', middleWares.ensureAuthenticated, task.addTask, middleWares.sendJson);
+    app.put('/task', middleWares.ensureAuthenticated, task.updateTask, middleWares.sendJson);
+	app.delete('/task/:id', middleWares.ensureAuthenticated, task.deleteTask, middleWares.sendJson);
+    app.get('/task', middleWares.ensureAuthenticated, task.getTasks, middleWares.sendJson);
+    app.put('/task/reject/:id', middleWares.ensureAuthenticated, task.rejectTask, middleWares.sendJson);
 
     var category = require('../app/controllers/category');
     app.post('/category', category.addCategory, middleWares.sendJson);
