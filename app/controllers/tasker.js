@@ -37,7 +37,8 @@ exports.addTasker = function (req, res, next) {
             } else {
                 //promiseCallbackHandler.mongooseSuccess(req, next)(data);
                 User.findOneAndUpdate({
-                    _id: new ObjectId(req.user._id)
+                    _id: new ObjectId(req.user._id),
+                    status: constants.USER_STATUS.ACTIVE
                 }, {
                     _tasker: data._id
                 }).exec().then(promiseCallbackHandler.mongooseSuccess(req, next), promiseCallbackHandler.mongooseFail(next));
@@ -54,7 +55,8 @@ exports.updateTasker = function (req, res, next) {
         
         var taskerPromise;
         var userPromise = User.findOne({
-            _id: new ObjectId(req.user._id)
+            _id: new ObjectId(req.user._id),
+            status: constants.USER_STATUS.ACTIVE
         }).exec();
         var findTasker = function (user) {
             var taskerId = user._tasker;
@@ -74,7 +76,7 @@ exports.deleteTasker = function (req, res, next) {
         }).exec();
         var findTasker = function (user) {
             var taskerId = user._tasker;
-            taskerPromise = Tasker.findOneAndUpdate({_id: new ObjectId(taskerId)}, {status: 1}).exec();
+            taskerPromise = Tasker.findOneAndUpdate({_id: new ObjectId(taskerId)}, {status: constants.USER_STATUS.ACTIVE}).exec();
         };
 
         userPromise.then(findTasker, promiseCallbackHandler.mongooseFail(next));
