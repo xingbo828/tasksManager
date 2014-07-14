@@ -4,10 +4,10 @@ var passport = require('passport'),
     constants = require("./constants");
 passport.serializeUser(function (user, done) {
     delete(user.password);
-    done(null, user);
+    done(null, user._id);
 });
-passport.deserializeUser(function (user, done) {
-    done(null, user);
+passport.deserializeUser(function (userId, done) {
+    done(null, userId);
 });
 User = mongoose.model('User');
 passport.use(new LocalStrategy({

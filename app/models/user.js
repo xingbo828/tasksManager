@@ -3,6 +3,7 @@ var mongoose = require('mongoose'),
     validators = require('../utils/validators'),
     extend = require('mongoose-schema-extend'),
     constants = require('../../config/constants'),
+    TaskerSchema = require('./tasker').TaskerSchema,
     Schema = mongoose.Schema;
 
 
@@ -43,7 +44,11 @@ var UserSchema = new Schema({
     },
     active :{
         type: Boolean
-	}
+	},
+    _tasker: {
+        type: Schema.Types.ObjectId,
+        ref: 'Tasker'
+    },
 });
 UserSchema.pre('save', function (next) {
     var user = this;

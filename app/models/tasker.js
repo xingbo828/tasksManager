@@ -6,52 +6,68 @@
  * To change this template use Tools | Templates.
  */
 var mongoose = require('mongoose'),
-    extend = require('mongoose-schema-extend'),
-    UserSchema = require("./user").UserSchema,
-    Schema = mongoose.Schema;
-var TaskerSchema = UserSchema.extend({
-    tasker: {
-        city: {
-            type: String,
+    Schema = mongoose.Schema,
+    constants = require('../../config/constants');
+var TaskerSchema = new Schema({
+    city: {
+        type: String,
+        required: true,
+        index: true
+    },
+    bio: {
+        type: String,
+        required: true
+    },
+    hasVehicle: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    capableTask: [{
+        _categoryId: {
+            type: Schema.Types.ObjectId,
+            ref: 'Category',
             required: true,
-            index: true
+            index: {
+                unique: true
+            },
         },
-        bio: {
+        description: {
             type: String,
             required: true
         },
-        hasVehicle: {
-            type: Boolean,
+        rate: {
+            type: Number,
+            required: true
+        }
+    }],
+    status: {
+        type: Number
+    },
+    availability: [{
+        day: {
+            type: Number,
             required: true,
-            default: false
-        },
-        capableTask: [{
-            _categoryId: {
-                type: Schema.Types.ObjectId,
-                ref: 'Category',
-                required: true,
-                index: {
-                    unique: true
-                },
-            },
-            description: {
-                type: String,
-                required: true
-            },
-            rate: {
-                type: Number,
-                required: true
+            index: {
+                unique: true
             }
-        }],
-        availability: [{
-            day: {
-                type: Number,
-                required: true,
-                index: {
-                    unique: true
-                }
-            },
-            timeSlot: [Boolean]
-        }]
-    }
+        },
+        timeSlot: [Boolean]
+    }]
 });
+
+
+// TaskerSchema.post("save", function(tasker) {
+//     var self = this;
+
+//     User.findOneUpdate({
+//                     _id: new ObjectId(req.user._id)
+//                 }, {
+//                     _tasker: data._id
+//                 }).exec().then(promiseCallbackHandler.mongooseSuccess(req, next), promiseCallbackHandler.mongooseFail(next));
+
+//     next();
+// });
+
+
+exports.Tasker = mongoose.model('Tasker', TaskerSchema);
