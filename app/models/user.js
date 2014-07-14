@@ -41,9 +41,10 @@ var UserSchema = new Schema({
     loginHistory: {
         type: Array
     },
-    active :{
-        type: Boolean
-	}
+    status: {
+        type: Number,
+        default: constants.USER_STATUS.ACTIVE
+    }
 });
 UserSchema.pre('save', function (next) {
     var user = this;

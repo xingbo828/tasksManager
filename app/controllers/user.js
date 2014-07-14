@@ -27,8 +27,7 @@ exports.add = function(req, res, next) {
     var newUser = new User({
         email: email,
         password: password,
-        nickName: nickName,
-        active: true
+        nickName: nickName
     });
     newUser.save(function(err) {
         if(err) {
@@ -78,7 +77,7 @@ exports.update = function(req, res, next) {
 
 /////TODO////////
 exports.cancel = function(req, res, next) {
-    User.update({_id: req.user._id}, { 'active':false },function(err){
+    User.update({_id: req.user._id}, { 'status':constants.USER_STATUS.DELETED },function(err){
         if(err) {
             err.status = constants.FAIL_STATUS_CODE;
             err.name = constants.ERROR_TYPE_MONGOOSE;

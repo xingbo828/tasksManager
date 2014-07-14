@@ -22,5 +22,10 @@ module.exports = Object.freeze({
         STANDARD: 0,
         TASKER: 1,
         ADMIN: 999
+    },
+    USER_STATUS:{
+        ACTIVE: 0,
+        SUSPENDED: 1,
+        DELETED: 2
     }
 });
