@@ -12,4 +12,22 @@ var constants = require('../../config/constants'),
     Tasker = mongoose.model('Tasker'),
     ObjectId = mongoose.Types.ObjectId;
 
-exports.
+exports.addTasker = function(){
+    
+};
+
+exports.updateTasker = function(){
+    
+};
+
+exports.deleteTasker = function(){
+    
+};
+
+exports.getTasker = function(){
+    
+};
+
+exports.getTaskers = function(){
+    
+};
