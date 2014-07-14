@@ -28,9 +28,6 @@ var TaskerSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: 'Category',
             required: true,
-            index: {
-                unique: true
-            },
         },
         description: {
             type: String,
@@ -47,10 +44,7 @@ var TaskerSchema = new Schema({
     availability: [{
         day: {
             type: Number,
-            required: true,
-            index: {
-                unique: true
-            }
+            required: true
         },
         timeSlot: [Boolean]
     }]

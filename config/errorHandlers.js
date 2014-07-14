@@ -9,7 +9,7 @@ winston.add(winston.transports.MongoDB, {
 });
 module.exports = function (app) {
     var logErrors = function logErrors(err, req, res, next) {
-        console.log(err);
+        console.log(err.stack);
         next(err);
     };
     var clientErrorHandler = function clientErrorHandler(err, req, res, next) {
@@ -47,6 +47,6 @@ module.exports = function (app) {
     process.on('uncaughtException', function (err) {
         // FIXME: use forever or supervisor to restart the server.
         winston.log('error', err);
-        console.log(err);
+        console.log(err.stack);
     });
 };
