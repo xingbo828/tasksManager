@@ -82,7 +82,7 @@ exports.deleteTasker = function (req, res, next) {
         }).exec();
         var findTasker = function (user) {
             var taskerId = user._tasker;
-            return Tasker.findOneAndUpdate({_id: new ObjectId(taskerId)}, {status: constants.USER_STATUS.ACTIVE}).exec();
+            return Tasker.findOneAndUpdate({_id: new ObjectId(taskerId)}, {status: constants.USER_STATUS.DELETED}).exec();
         };
 
         userPromise

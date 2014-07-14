@@ -48,17 +48,11 @@ var TaskerSchema = new Schema({
 });
 
 
-// TaskerSchema.post("save", function(tasker) {
-//     var self = this;
-
-//     User.findOneUpdate({
-//                     _id: new ObjectId(req.user._id)
-//                 }, {
-//                     _tasker: data._id
-//                 }).exec().then(promiseCallbackHandler.mongooseSuccess(req, next), promiseCallbackHandler.mongooseFail(next));
-
-//     next();
-// });
-
+TaskerSchema.post("save", function(tasker,d) {
+    console.log(d);
+});
+TaskerSchema.post("update", function(tasker,d) {
+    console.log(d);
+});
 
 exports.Tasker = mongoose.model('Tasker', TaskerSchema);
