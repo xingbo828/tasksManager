@@ -7,7 +7,7 @@ passport.serializeUser(function (user, done) {
     done(null, user._id);
 });
 passport.deserializeUser(function (userId, done) {
-    done(null, userId);
+    done(null, {_id: userId});
 });
 User = mongoose.model('User');
 passport.use(new LocalStrategy({
