@@ -21,4 +21,8 @@ module.exports = function (app) {
     app.post('/category', category.addCategory, middleWares.sendJson);
     app.get('/category', middleWares.readCache, category.getCategories, middleWares.sendJson);
     app.delete('/category/:id', category.deleteCategory, middleWares.sendJson);
+    
+    var tasker = require('../app/controllers/tasker');
+    app.post('/category', middleWares.ensureAuthenticated, tasker.addTasker, middleWares.sendJson);
+    app.put('/category', middleWares.ensureAuthenticated, tasker.updateTasker, middleWares.sendJson);
 };

@@ -75,11 +75,12 @@ exports.deleteTasker = function (req, res, next) {
         }).exec();
         var findTasker = function (user) {
             var taskerId = user._tasker;
-            taskerPromise = Tasker.findOneUpdate({_id: new ObjectId(taskerId)}, {status: 1}}).exec();
+            taskerPromise = Tasker.findOneUpdate({_id: new ObjectId(taskerId)}, {status: 1}).exec();
         };
 
         userPromise.then(findTasker, promiseCallbackHandler.mongooseFail(next));
         taskerPromise.then(promiseCallbackHandler.mongooseSuccess(req, next), promiseCallbackHandler.mongooseFail(next));
+    });
 };
 exports.getTasker = function (req, res, next) {};
 exports.getTaskers = function (req, res, next) {};
