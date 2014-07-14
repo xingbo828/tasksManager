@@ -49,7 +49,7 @@ exports.updateTasker = function(req, res, next) {
             status: constants.USER_STATUS.ACTIVE
         }).exec();
 
-        var findTasker = function(user) {
+        var updateTasker = function(user) {
 
             var taskerId = user._tasker;
             return Tasker.findOneAndUpdate({
@@ -64,29 +64,26 @@ exports.updateTasker = function(req, res, next) {
 };
 
 exports.deleteTasker = function(req, res, next) {
-    _saveOrUpdateTasker(function(config) {
 
-        var updateUser = User.findOneAndUpdate({
-            _id: new ObjectId(req.user._id),
-            status: constants.USER_STATUS.ACTIVE
+    var updateUser = User.findOneAndUpdate({
+        _id: new ObjectId(req.user._id),
+        status: constants.USER_STATUS.ACTIVE
+    }, {
+        userType: constants.USER_TYPE.STANDARD
+    }).exec();
+
+    var deleteTasker = function(user) {
+        var taskerId = user._tasker;
+        return Tasker.findOneAndUpdate({
+            _id: new ObjectId(taskerId)
         }, {
-            userType: constants.USER_TYPE.STANDARD
+            status: constants.USER_STATUS.DELETED
         }).exec();
+    };
 
-        var updateTasker = function(user) {
-            var taskerId = user._tasker;
-            return Tasker.findOneAndUpdate({
-                _id: new ObjectId(taskerId)
-            }, {
-                status: constants.USER_STATUS.DELETED
-            }).exec();
-        };
-
-        updateUser
-            .then(updateTasker, promiseCallbackHandler.mongooseFail(next))
-            .then(promiseCallbackHandler.mongooseSuccess(req, next), promiseCallbackHandler.mongooseFail(next));
-
-    });
+    updateUser
+        .then(deleteTasker)
+        .then(promiseCallbackHandler.mongooseSuccess(req, next), promiseCallbackHandler.mongooseFail(next));
 };
 exports.getTasker = function(req, res, next) {
     var id = req.params.id;
