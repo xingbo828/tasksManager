@@ -22,20 +22,18 @@ var TaskerSchema = new Schema({
         type: Boolean,
         required: true,
         default: false
-    },
+    }
+    ,
     capableTask: [{
         _categoryId: {
             type: Schema.Types.ObjectId,
-            ref: 'Category',
-            required: true,
+            ref: 'Category'
         },
         description: {
-            type: String,
-            required: true
+            type: String
         },
         rate: {
-            type: Number,
-            required: true
+            type: Number
         }
     }],
     status: {
@@ -43,8 +41,7 @@ var TaskerSchema = new Schema({
     },
     availability: [{
         day: {
-            type: Number,
-            required: true
+            type: Number
         },
         timeSlot: [Boolean]
     }]
