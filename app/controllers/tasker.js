@@ -40,19 +40,17 @@ exports.addTasker = function (req, res, next) {
 
 
 exports.updateTasker = function (req, res, next) {
-
     _saveOrUpdateTasker(req, res, next, function (config) {
         config.capableTask = req.body.capableTask;
         config.availability = req.body.availability;
 
-     
-        var updateTasker = function (user) {
+        
+        var findTasker = function (user) {
+
             var taskerId = user._tasker;
             return Tasker.findOneAndUpdate({_id: new ObjectId(taskerId)}, config).exec();
         };
-
-        
-        
+   
         User.findOne({_id: new ObjectId(req.user._id), status: constants.USER_STATUS.ACTIVE}).exec()
         // Promise does propagate error and rejected to the last onRejected handler
         // It didn't work when I tested before because I didn't put throw error in promise
@@ -73,10 +71,10 @@ exports.deleteTasker = function (req, res, next) {
             return Tasker.findOneAndUpdate({_id: new ObjectId(taskerId)}, {status: constants.USER_STATUS.DELETED}).exec();
         };
         
-
         User.findOneAndUpdate({_id: new ObjectId(req.user._id), status: constants.USER_STATUS.ACTIVE},{userType: constants.USER_TYPE.STANDARD}).exec()
         .then(updateTasker, promiseCallbackHandler.mongooseFail(next))
         .then(promiseCallbackHandler.mongooseSuccess(req, next), promiseCallbackHandler.mongooseFail(next));
+
     });
 };
 exports.getTasker = function (req, res, next) {
