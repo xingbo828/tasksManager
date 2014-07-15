@@ -13,7 +13,7 @@ var config = {
     redis:'localhost',
     redisPort:6379,
     queryCacheExpire:  5, //cache query get result for 5 seconds
-    sessionExpiry: 60 * 5 //5 mins expire
+    sessionExpiry: 60 * 5 * 10 //5 mins expire
       
   },
     

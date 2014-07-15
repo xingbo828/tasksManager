@@ -48,11 +48,4 @@ var TaskerSchema = new Schema({
 });
 
 
-TaskerSchema.post("save", function(tasker,d) {
-    console.log(d);
-});
-TaskerSchema.post("update", function(tasker,d) {
-    console.log(d);
-});
-
 exports.Tasker = mongoose.model('Tasker', TaskerSchema);

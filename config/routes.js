@@ -25,5 +25,5 @@ module.exports = function (app) {
     var tasker = require('../app/controllers/tasker');
     app.post('/tasker', middleWares.ensureAuthenticated, tasker.addTasker, middleWares.sendJson);
     app.put('/tasker', middleWares.ensureAuthenticated, tasker.updateTasker, middleWares.sendJson);
-    app.get('/tasker/:id', middleWares.ensureAuthenticated, tasker.getTasker, middleWares.sendJson);
+    app.get('/tasker/:id', middleWares.ensureAuthenticated, middleWares.readCache, tasker.getTasker, middleWares.sendJson);
 };

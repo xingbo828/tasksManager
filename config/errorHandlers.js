@@ -22,7 +22,7 @@ module.exports = function (app) {
                     errorToReturn.code = err.code;
                 } else if(err.name === constants.ERROR_TYPE_MONGOOSE) {
                     if( !! err.errors) {
-                        errorToReturn.errors = err.errors;
+                        errorToReturn.errors = err.errors.message;
                     } else if( !! err.code) {
                         errorToReturn.code = err.code;
                     }

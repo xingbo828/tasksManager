@@ -1,4 +1,5 @@
 var constants = require('../../config/constants');
+
 exports.mongooseSuccess = function (req, next) {
     return function (data) {
         if(!data){
@@ -16,6 +17,7 @@ exports.mongooseFail = function (next) {
     return function (err) {
         err.status = constants.FAIL_STATUS_CODE;
         err.name = constants.ERROR_TYPE_MONGOOSE;
+        console.log(err);
         return next(err);
     };
 };
