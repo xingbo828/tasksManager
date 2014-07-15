@@ -26,4 +26,6 @@ module.exports = function (app) {
     app.post('/tasker', middleWares.ensureAuthenticated, tasker.addTasker, middleWares.sendJson);
     app.put('/tasker', middleWares.ensureAuthenticated, tasker.updateTasker, middleWares.sendJson);
     app.get('/tasker/:id', middleWares.ensureAuthenticated, middleWares.readCache, tasker.getTasker, middleWares.sendJson);
+    app.delete('/tasker', middleWares.ensureAuthenticated, tasker.deleteTasker, middleWares.sendJson);
+
 };
