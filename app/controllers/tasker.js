@@ -37,7 +37,8 @@ exports.addTasker = function(req, res, next) {
             _id: new ObjectId(req.user._id),
             status: constants.USER_STATUS.ACTIVE
         }, {
-            _tasker: data._id
+            _tasker: data._id,
+            userType: constants.USER_TYPE.TASKER
         }).exec();
     };
 
@@ -132,7 +133,6 @@ exports.getTasker = function(req, res, next) {
             _id: new ObjectId(id)
         })
         .lean()
-        .populate('_tasker')
         .select('_tasker nickName, email')
         .populate({
             path: '_tasker',
@@ -144,35 +144,32 @@ exports.getTasker = function(req, res, next) {
         })
         .exec();
 
-    var categoryPromise = Category.find({}).exec();
-
-    var populateUser = function(data) {
-        var user = data[0][0];
-        var categories = data[1];
-        if(!user){
+    var populateCategory = function(user) {
+        if (!user) {
             var err = new Error("No such tasker");
             err.status = constants.FAIL_STATUS_CODE;
             throw err;
         }
-
-        _.each(user._tasker.capableTask, function(value, key) {
-            var id = value._categoryId;
-            //loop through categories
-            _.each(categories, function(category, index) {
-                _.each(category.subCategories, function(subCategory, sub_index) {
-                    if (subCategory._id.toString() === id.toString()) {
-                        user._tasker.capableTask[key].name = subCategory.name;
-
-                    }
-                });
-            });
+        var promise = new mongoose.Promise;
+        return Category.populate(user, {
+            path: '_tasker.capableTask._categoryId',
+            select: 'name',
+            match: {
+                active: true
+            }
+        }, function(err, docs) {
+            if (err) {
+                err.status = constants.FAIL_STATUS_CODE;
+                promise.reject(err);
+            } else {
+                promise.fulfill(promise, docs);
+            }
         });
-        return user;
+        return promise;
     };
 
-
-    when.all([userPromise, categoryPromise])
-        .then(populateUser)
+    userPromise
+        .then(populateCategory)
         .then(
             promiseCallbackHandler.mongooseSuccess(req, next),
             promiseCallbackHandler.mongooseFail(next)
@@ -182,13 +179,47 @@ exports.getTasker = function(req, res, next) {
 
 exports.getTaskers = function(req, res, next) {
 
-    User
-        .find({
-            _id: new ObjectId(id)
+    var userPromise = User.find({})
+        .lean()
+        .select('_tasker nickName, email')
+        .populate({
+            path: '_tasker',
+            match: {
+                status: {
+                    $nin: [constants.USER_STATUS.SUSPENDED, constants.USER_STATUS.DELETED]
+                }
+            }
         })
-        .populate('_tasker')
-        .select('nickName email capableTask')
-        .where()
-        .exec()
-        .then(promiseCallbackHandler.mongooseSuccess(req, next), promiseCallbackHandler.mongooseFail(next));
+        .exec();
+
+    var populateCategory = function(user) {
+        if (!user) {
+            var err = new Error("No such tasker");
+            err.status = constants.FAIL_STATUS_CODE;
+            throw err;
+        }
+        var promise = new mongoose.Promise;
+        return Category.populate(user, {
+            path: '_tasker.capableTask._categoryId',
+            select: 'name',
+            match: {
+                active: true
+            }
+        }, function(err, docs) {
+            if (err) {
+                err.status = constants.FAIL_STATUS_CODE;
+                promise.reject(err);
+            } else {
+                promise.fulfill(promise, docs);
+            }
+        });
+        return promise;
+    };
+
+    userPromise
+        .then(populateCategory)
+        .then(
+            promiseCallbackHandler.mongooseSuccess(req, next),
+            promiseCallbackHandler.mongooseFail(next)
+    )
 };
