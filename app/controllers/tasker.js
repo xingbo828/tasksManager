@@ -150,30 +150,20 @@ exports.getTasker = function(req, res, next) {
             err.status = constants.FAIL_STATUS_CODE;
             throw err;
         }
-        var promise = new mongoose.Promise;
-        return Category.populate(user, {
-            path: '_tasker.capableTask._categoryId',
-            select: 'name',
-            match: {
-                active: true
-            }
-        }, function(err, docs) {
-            if (err) {
-                err.status = constants.FAIL_STATUS_CODE;
-                promise.reject(err);
-            } else {
-                promise.fulfill(promise, docs);
-            }
-        });
-        return promise;
-    };
 
+        return Category.populate(user, {
+            path: '_tasker.capableTask._categoryId'
+        });
+    };
+    
+           
     userPromise
         .then(populateCategory)
         .then(
             promiseCallbackHandler.mongooseSuccess(req, next),
             promiseCallbackHandler.mongooseFail(next)
-    )
+    );
+
 };
 
 
@@ -198,22 +188,14 @@ exports.getTaskers = function(req, res, next) {
             err.status = constants.FAIL_STATUS_CODE;
             throw err;
         }
-        var promise = new mongoose.Promise;
         return Category.populate(user, {
             path: '_tasker.capableTask._categoryId',
             select: 'name',
             match: {
                 active: true
             }
-        }, function(err, docs) {
-            if (err) {
-                err.status = constants.FAIL_STATUS_CODE;
-                promise.reject(err);
-            } else {
-                promise.fulfill(promise, docs);
-            }
         });
-        return promise;
+       
     };
 
     userPromise
@@ -221,5 +203,5 @@ exports.getTaskers = function(req, res, next) {
         .then(
             promiseCallbackHandler.mongooseSuccess(req, next),
             promiseCallbackHandler.mongooseFail(next)
-    )
+    );
 };
