@@ -147,9 +147,13 @@ exports.getTasker = function(req, res, next) {
     var categoryPromise = Category.find({}).exec();
 
     var populateUser = function(data) {
-        var promise = new mongoose.Promise;
         var user = data[0][0];
         var categories = data[1];
+        if(!user){
+            var err = new Error("No such tasker");
+            err.status = constants.FAIL_STATUS_CODE;
+            throw err;
+        }
 
         _.each(user._tasker.capableTask, function(value, key) {
             var id = value._categoryId;
@@ -162,19 +166,13 @@ exports.getTasker = function(req, res, next) {
                     }
                 });
             });
-
-            if (key === (user._tasker.capableTask.length - 1)) {
-                promise.resolve.bind(promise)(null, user);
-            }
         });
-
-        return promise;
-
+        return user;
     };
 
 
     when.all([userPromise, categoryPromise])
-        .then(populateUser, promiseCallbackHandler.mongooseFail(next))
+        .then(populateUser)
         .then(
             promiseCallbackHandler.mongooseSuccess(req, next),
             promiseCallbackHandler.mongooseFail(next)
