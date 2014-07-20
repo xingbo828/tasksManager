@@ -27,6 +27,7 @@ module.exports = Object.freeze({
         ACTIVE: 0,
         SUSPENDED: 1,
         DELETED: 2,
+        PENDING: 3
         
     }
 });

@@ -3,7 +3,6 @@ var constants = require('../../config/constants'),
     config = require('../../config/config');
 
 exports.ensureAuthenticated = function (req, res, next) {
-    
     // TODO: Add proper error handling for unauthorized or should it be an error?
     if(req.isAuthenticated()) {
         return next();

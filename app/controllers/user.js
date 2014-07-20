@@ -2,27 +2,19 @@ var passport = require('passport'),
     bcrypt = require('bcrypt'),
     constants = require('../../config/constants'),
     mongoose = require('mongoose'),
+    errUtil = require('../utils/error'),
     User = mongoose.model('User');
 exports.add = function(req, res, next) {
     var email = req.body.email;
     var password = req.body.password;
     var nickName = req.body.nickName;
     var confirmPassword = req.body.confirmPassword;
-    if(!!confirmPassword){
-        if(confirmPassword !== password){
-            var err = {
-            status: constants.FAIL_STATUS_CODE,
-            errors: new Error('password does not match')
-        };
-            return next(err);
+    if( !! confirmPassword) {
+        if(confirmPassword !== password) {
+            return next(errUtil.newFailedError('password does not match'));
         }
-    }
-    else{
-        var err = {
-            status: constants.FAIL_STATUS_CODE,
-            errors: new Error('missing confirm password')
-        };
-        return next(err);
+    } else {        
+        return next(errUtil.newFailedError('missing confirm password'));
     }
     var newUser = new User({
         email: email,
@@ -54,14 +46,13 @@ exports.login = function(req, res, next) {
             if(err) {
                 return next(err);
             }
-            
             return next();
         });
     })(req, res, next);
 };
 exports.getInfo = function(req, res, next) {
-//     res.json(req.user);
-	req.data = req.user;
+    //     res.json(req.user);
+    req.data = req.user;
     return next();
 };
 exports.logout = function(req, res, next) {
@@ -69,15 +60,17 @@ exports.logout = function(req, res, next) {
     req.logout();
     return next();
 };
-
 exports.update = function(req, res, next) {
     // TODO: Add update user stuffs
     return next();
 }
-
 /////TODO////////
 exports.cancel = function(req, res, next) {
-    User.update({_id: req.user._id}, { 'status':constants.USER_STATUS.DELETED },function(err){
+    User.update({
+        _id: req.user._id
+    }, {
+        'status': constants.USER_STATUS.DELETED
+    }, function(err) {
         if(err) {
             err.status = constants.FAIL_STATUS_CODE;
             err.name = constants.ERROR_TYPE_MONGOOSE;

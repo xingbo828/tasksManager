@@ -17,7 +17,7 @@ module.exports = function (app) {
             var errorToReturn = {
                 status: err.status
             };
-            if(typeof err.name !== 'undefined') {
+            if(typeof err.name !== 'undefined' && err.name !== "Error") {
                 if(err.name === constants.ERROR_TYPE_MONGO) {
                     errorToReturn.code = err.code;
                 } else if(err.name === constants.ERROR_TYPE_MONGOOSE) {
@@ -28,7 +28,7 @@ module.exports = function (app) {
                     }
                 }
             } else {
-                errorToReturn.message = err.errors.message;
+                errorToReturn.message = err.message;
             }
             res.json(errorToReturn);
         } else {

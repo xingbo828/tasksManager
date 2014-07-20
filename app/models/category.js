@@ -7,18 +7,10 @@ var CategorySchema = new Schema({
         required: true,
         index: true
     },
-    subCategories: [{
-        name: {
-            type: String,
-            required: true,
-            index: true
-        },
-        active: {
-            type: Boolean,
-            required: true,
-            default: true
-        }
-    }],
+    _parent: {
+        type: Schema.Types.ObjectId,
+        ref: 'Category'
+    },
     active: {
         type: Boolean,
         required: true,

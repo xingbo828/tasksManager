@@ -1,4 +1,5 @@
 var constants = require('../../config/constants'),
+    errUtil = require('../utils/error'),
     mongoose = require('mongoose'),
     moment = require('moment'),
     _ = require('underscore'),
@@ -17,11 +18,7 @@ var _saveOrUpdateTask = function(req, res, next, cb) {
     //validations
     if (!!taskDoneDate && !moment(taskDoneDate).isValid()) {
         //TODO :: Add seconds to the constants file  || moment(taskDoneDate).unix() <= moment().add("seconds", 60*60*2).unix()
-        var err = {
-            status: constants.FAIL_STATUS_CODE,
-            errors: new Error('Invalid date')
-        };
-        return next(err);
+        return next(errUtil.newFailedError('Invalid date'));
     }
     var config = (function() {
         var temp = {
@@ -66,11 +63,7 @@ exports.addTask = function(req, res, next) {
 exports.updateTask = function(req, res, next) {
     var taskId = req.body.taskId;
     if (!taskId) {
-        var err = {
-            status: constants.FAIL_STATUS_CODE,
-            errors: new Error('Unable to find task ID')
-        };
-        return next(err);
+        return next(errUtil.newFailedError('Unable to find task ID'));
     }
     _saveOrUpdateTask(req, res, next, function(config) {
         promise = Task.findOneAndUpdate({

@@ -37,7 +37,8 @@ var TaskerSchema = new Schema({
         }
     }],
     status: {
-        type: Number
+        type: Number,
+        default: constants.USER_STATUS.PENDING
     },
     availability: [{
         day: {
