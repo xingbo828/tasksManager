@@ -33,7 +33,7 @@ module.exports = function (app) {
             res.json(errorToReturn);
         } 
         else if(constants.UNAUTHORIZED_STATUS_CODE === err.status){
-            res.json(401, err.message);
+            res.send(401, err.message);
         }
         else {
             next(err);
