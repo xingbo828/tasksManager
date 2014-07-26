@@ -13,7 +13,7 @@ module.exports = function (app) {
         next(err);
     };
     var clientErrorHandler = function clientErrorHandler(err, req, res, next) {
-        if([constants.FAIL_STATUS_CODE, constants.UNAUTHORIZED_STATUS_CODE].indexOf(err.status) >= 0) {
+        if([constants.FAIL_STATUS_CODE].indexOf(err.status) >= 0) {
             var errorToReturn = {
                 status: err.status
             };
@@ -31,7 +31,11 @@ module.exports = function (app) {
                 errorToReturn.message = err.message;
             }
             res.json(errorToReturn);
-        } else {
+        } 
+        else if(constants.UNAUTHORIZED_STATUS_CODE === err.status){
+            res.json(401, err.message);
+        }
+        else {
             next(err);
         }
     };

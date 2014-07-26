@@ -8,7 +8,6 @@ passport.serializeUser(function(user, done) {
 });
 passport.deserializeUser(function(userId, done) {
     UserController._getUser(userId, function(user){
-        console.log(user);
         done(null, user);
     }, function(err){
         done(err, null);
