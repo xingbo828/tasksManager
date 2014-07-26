@@ -28,6 +28,7 @@ exports.addTasker = function(req, res, next) {
     var createTasker = function(config) {
         return Tasker.create(config);
     };
+    console.log(req.user);
     var updateUserRef = function(data) {
         return User.findOneAndUpdate({
             _id: new ObjectId(req.user._id),
@@ -132,6 +133,7 @@ exports.getTasker = function(req, res, next) {
     };
     userPromise.then(populateCategory).then(promiseCallbackHandler.mongooseSuccess(req, next), promiseCallbackHandler.mongooseFail(next));
 };
+
 exports.getTaskers = function(req, res, next) {
     var userPromise = User.find({}).lean().select('_tasker nickName, email').populate({
         path: '_tasker',

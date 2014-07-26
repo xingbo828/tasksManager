@@ -3,7 +3,9 @@ var passport = require('passport'),
     constants = require('../../config/constants'),
     mongoose = require('mongoose'),
     errUtil = require('../utils/error'),
-    User = mongoose.model('User');
+    User = mongoose.model('User'),
+    Category = mongoose.model('Category'),
+    ObjectId = mongoose.Types.ObjectId;
 exports.add = function(req, res, next) {
     var email = req.body.email;
     var password = req.body.password;
@@ -13,7 +15,7 @@ exports.add = function(req, res, next) {
         if(confirmPassword !== password) {
             return next(errUtil.newFailedError('password does not match'));
         }
-    } else {        
+    } else {
         return next(errUtil.newFailedError('missing confirm password'));
     }
     var newUser = new User({
@@ -46,6 +48,7 @@ exports.login = function(req, res, next) {
             if(err) {
                 return next(err);
             }
+            req.data = req.user;
             return next();
         });
     })(req, res, next);
@@ -55,6 +58,27 @@ exports.getInfo = function(req, res, next) {
     req.data = req.user;
     return next();
 };
+exports._getUser = function(id, sucessFn, FailureFn) {
+    var userPromise = User.findOne({
+        _id: new ObjectId(id)
+    }).lean().select('_id _tasker nickName, email').populate({
+        path: '_tasker',
+        match: {
+            status: {
+                $nin: [constants.USER_STATUS.SUSPENDED, constants.USER_STATUS.DELETED]
+            }
+        }
+    }).exec();
+    var populateCategory = function(user) {
+        if(!user) {
+            throw errUtil.newFailedError('No such tasker');
+        }
+        return Category.populate(user, {
+            path: '_tasker.capableTask._categoryId'
+        });
+    };
+    userPromise.then(populateCategory).then(sucessFn, FailureFn);
+}
 exports.logout = function(req, res, next) {
     console.log("LOGOUT");
     req.logout();
