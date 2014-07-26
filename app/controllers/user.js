@@ -61,7 +61,7 @@ exports.getInfo = function(req, res, next) {
 exports._getUser = function(id, sucessFn, FailureFn) {
     var userPromise = User.findOne({
         _id: new ObjectId(id)
-    }).lean().select('_id _tasker nickName, email userType').populate({
+    }).lean().select('_id _tasker nickName email userType').populate({
         path: '_tasker',
         match: {
             status: {
