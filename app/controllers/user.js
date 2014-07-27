@@ -13,10 +13,10 @@ exports.add = function(req, res, next) {
     var confirmPassword = req.body.confirmPassword;
     if( !! confirmPassword) {
         if(confirmPassword !== password) {
-            return next(errUtil.newFailedError('password does not match'));
+            return next(errUtil.newFailedError('password does not match', 400));
         }
     } else {
-        return next(errUtil.newFailedError('missing confirm password'));
+        return next(errUtil.newFailedError('missing confirm password', 400));
     }
     var newUser = new User({
         email: email,
@@ -73,7 +73,7 @@ exports._getUser = function(id) {
     }).exec();
     var populateCategory = function(user) {
         if(!user) {
-            throw errUtil.newFailedError('No such tasker');
+            throw errUtil.newFailedError('No such user', 200);
         }
         return Category.populate(user, {
             path: '_tasker.capableTask._categoryId'

@@ -15,6 +15,9 @@ module.exports = function(app) {
     var clientErrorHandler = function clientErrorHandler(err, req, res, next) {
         if([constants.FAIL_STATUS_CODE].indexOf(err.status) >= 0) {
             var httpErrCode = 500;
+            if(!!err.httpErrCode){
+                httpErrCode = err.httpErrCode;
+            }
             var errorToReturn = {
                 status: err.status
             };

@@ -55,7 +55,7 @@ exports.updateTasker = function(req, res, next) {
             config.availability = req.body.availability;
         }
         if(!user._tasker) {
-            throw errUtil.newFailedError("Not a tasker");;
+            throw errUtil.newFailedError("Not a tasker", 401);;
         }
         return Tasker.findOneAndUpdate({
             _id: new ObjectId(user._tasker),
@@ -64,7 +64,7 @@ exports.updateTasker = function(req, res, next) {
     };
     var checkUpdate = function(data) {
         if(!data || !Object.keys(data).length) {
-            throw errUtil.newFailedError("Not a tasker");
+            throw errUtil.newFailedError("Not a tasker", 401);
         }
         return data;
     };
@@ -80,7 +80,7 @@ exports.deleteTasker = function(req, res, next) {
     }).exec();
     var deleteTasker = function(user) {
         if(!user) {
-            throw errUtil.newFailedError('Unable to find user');
+            throw errUtil.newFailedError('Unable to find user', 400);
         }
         var taskerId = user._tasker;
         originUserType = user.userType;
@@ -102,7 +102,7 @@ exports.deleteTasker = function(req, res, next) {
     };
     var checkUpdate = function(data) {
         if(!data || !Object.keys(data).length) {
-            throw errUtil.newFailedError("Not a tasker");
+            throw errUtil.newFailedError("Not a tasker", 401);
         }
         return data;
     };
@@ -122,7 +122,7 @@ exports.getTasker = function(req, res, next) {
     }).exec();
     var populateCategory = function(user) {
         if(!user) {
-            throw errUtil.newFailedError('No such tasker');
+            throw errUtil.newFailedError('No such tasker', 200);
         }
         return Category.populate(user, {
             path: '_tasker.capableTask._categoryId'
@@ -141,7 +141,7 @@ _getTaskers = function() {
     }).exec();
     var populateCategory = function(user) {
         if(!user) {
-            throw errUtil.newFailedError('No such tasker');
+            throw errUtil.newFailedError('No such tasker', 200);
         }
         return Category.populate(user, {
             path: '_tasker.capableTask._categoryId',
@@ -165,7 +165,7 @@ exports.filter = function(req, res, next) {
         var categories = data[0];
         var taskers = data[1];
         if(categories.length === 0 || taskers.length === 0) {
-            throw errUtil.newFailedError("Can't find any tasker");
+            throw errUtil.newFailedError("Can't find any tasker", 200);
         }
         var result = {};
         result.taskers = taskers.filter(function(element) {

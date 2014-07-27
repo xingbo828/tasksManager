@@ -25,6 +25,7 @@ var TaskerSchema = new Schema({
     }
     ,
     capableTask: [{
+        _id: false,
         _categoryId: {
             type: Schema.Types.ObjectId,
             ref: 'Category'
