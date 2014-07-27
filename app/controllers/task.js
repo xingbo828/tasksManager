@@ -53,6 +53,7 @@ exports.addTask = function(req, res, next) {
             if (err) {
                 promiseCallbackHandler.mongooseFail(next)(err);
             } else {
+                req.httpCode = 201;
                 promiseCallbackHandler.mongooseSuccess(req, next)(data);
             }
         });

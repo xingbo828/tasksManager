@@ -16,7 +16,7 @@ exports.mongooseFail = function(next) {
     return function(err) {
         if(err.name !== "Error") {
             err.status = constants.FAIL_STATUS_CODE;
-            err.name = constants.ERROR_TYPE_MONGOOSE;
+            err.type = constants.ERROR_TYPE_MONGOOSE;
         }
         console.log(err);
         return next(err);

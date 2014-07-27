@@ -25,10 +25,12 @@ exports.add = function(req, res, next) {
     });
     newUser.save(function(err) {
         if(err) {
+            console.log(err.name);
             err.status = constants.FAIL_STATUS_CODE;
-            err.name = constants.ERROR_TYPE_MONGOOSE;
+            err.type = constants.ERROR_TYPE_MONGOOSE;
             return next(err);
         } else {
+            req.httpCode = 201;
             return next();
         }
     });
@@ -97,7 +99,7 @@ exports.cancel = function(req, res, next) {
     }, function(err) {
         if(err) {
             err.status = constants.FAIL_STATUS_CODE;
-            err.name = constants.ERROR_TYPE_MONGOOSE;
+            err.type = constants.ERROR_TYPE_MONGOOSE;
             return next(err);
         } else {
             return next();

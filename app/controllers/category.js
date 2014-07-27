@@ -14,6 +14,7 @@ exports.addCategory = function(req, res, next) {
         newCategory._parent = parentId;
     }
     var addCategory = Category.create(newCategory);
+    req.httpCode = 201;
     addCategory.then(promiseCallbackHandler.mongooseSuccess(req, next), promiseCallbackHandler.mongooseFail(next));
 };
 exports.deleteCategory = function(req, res, next) {

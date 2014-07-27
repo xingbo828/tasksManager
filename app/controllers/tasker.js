@@ -28,7 +28,6 @@ exports.addTasker = function(req, res, next) {
     var createTasker = function(config) {
         return Tasker.create(config);
     };
-    console.log(req.user);
     var updateUserRef = function(data) {
         return User.findOneAndUpdate({
             _id: new ObjectId(req.user._id),
@@ -38,6 +37,7 @@ exports.addTasker = function(req, res, next) {
             userType: constants.USER_TYPE.TASKER
         }).exec();
     };
+    req.httpCode = 201;
     _saveOrUpdateTasker(req.body).then(createTasker).then(updateUserRef).then(promiseCallbackHandler.mongooseSuccess(req, next)).end(promiseCallbackHandler.mongooseFail(next));
 };
 exports.updateTasker = function(req, res, next) {
@@ -157,3 +157,6 @@ exports.getTaskers = function(req, res, next) {
     };
     userPromise.then(populateCategory).then(promiseCallbackHandler.mongooseSuccess(req, next), promiseCallbackHandler.mongooseFail(next));
 };
+exports.filter = function(req, res, next){
+    
+}

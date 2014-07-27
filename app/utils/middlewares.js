@@ -28,7 +28,12 @@ exports.sendJson = function(req, res, next) {
         redis.set(req.method + req.url, JSON.stringify(returnData));
         redis.expire(req.method + req.url, config.queryCacheExpire);
     }
-    res.json(returnData);
+    var httpCode = req.httpCode;
+    if( !httpCode) {
+        httpCode = 200;
+    }
+    console.log(httpCode);
+    res.json(httpCode, returnData);
 };
 exports.readCache = function(req, res, next) {
     var cacheKey = req.method + req.url;
