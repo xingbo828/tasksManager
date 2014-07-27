@@ -60,7 +60,7 @@ exports.getInfo = function(req, res, next) {
     req.data = req.user;
     return next();
 };
-exports._getUser = function(id, sucessFn, FailureFn) {
+exports._getUser = function(id) {
     var userPromise = User.findOne({
         _id: new ObjectId(id)
     }).lean().select('_id _tasker nickName email userType').populate({
@@ -79,7 +79,7 @@ exports._getUser = function(id, sucessFn, FailureFn) {
             path: '_tasker.capableTask._categoryId'
         });
     };
-    userPromise.then(populateCategory).then(sucessFn, FailureFn);
+    return userPromise.then(populateCategory);
 }
 exports.logout = function(req, res, next) {
     console.log("LOGOUT");

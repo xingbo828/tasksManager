@@ -68,10 +68,7 @@ exports.updateTasker = function(req, res, next) {
         }
         return data;
     };
-    when.all([_saveOrUpdateTasker(req.body), getUser])
-    .then(updateTasker)
-    .then(checkUpdate)
-    .then(promiseCallbackHandler.mongooseSuccess(req, next), promiseCallbackHandler.mongooseFail(next));
+    when.all([_saveOrUpdateTasker(req.body), getUser]).then(updateTasker).then(checkUpdate).then(promiseCallbackHandler.mongooseSuccess(req, next), promiseCallbackHandler.mongooseFail(next));
 };
 exports.deleteTasker = function(req, res, next) {
     var originUserType;
@@ -133,9 +130,8 @@ exports.getTasker = function(req, res, next) {
     };
     userPromise.then(populateCategory).then(promiseCallbackHandler.mongooseSuccess(req, next), promiseCallbackHandler.mongooseFail(next));
 };
-
-exports.getTaskers = function(req, res, next) {
-    var userPromise = User.find({}).lean().select('_tasker nickName, email').populate({
+_getTaskers = function() {
+    var userPromise = User.find({}).lean().select('_id _tasker nickName email userType').populate({
         path: '_tasker',
         match: {
             status: {
@@ -155,8 +151,35 @@ exports.getTaskers = function(req, res, next) {
             }
         });
     };
-    userPromise.then(populateCategory).then(promiseCallbackHandler.mongooseSuccess(req, next), promiseCallbackHandler.mongooseFail(next));
+    return userPromise.then(populateCategory);
 };
-exports.filter = function(req, res, next){
-    
+exports.getTaskers = function(req, res, next) {
+    _getTaskers().then(promiseCallbackHandler.mongooseSuccess(req, next), promiseCallbackHandler.mongooseFail(next))
+}
+exports.filter = function(req, res, next) {
+    var filterCategory = Category.find({
+        active: true,
+        name: new RegExp(".*" + req.query.query + ".*")
+    }).exec();
+    var filterTaskers = function(data) {
+        var categories = data[0];
+        var taskers = data[1];
+        if(categories.length === 0 || taskers.length === 0) {
+            throw errUtil.newFailedError("Can't find any tasker");
+        }
+        var result = {};
+        result.taskers = taskers.filter(function(element) {
+            if(!element._tasker){
+                return false;
+            }
+            return element._tasker.capableTask.some(function(task) {
+                console.log(categories[0]);
+                console.log(task);
+                return task._categoryId._id.equals(categories[0]._id);
+            });
+        });
+        result.categories = categories;
+        return result;
+    }
+    when.all([filterCategory, _getTaskers()]).then(filterTaskers).then(promiseCallbackHandler.mongooseSuccess(req, next), promiseCallbackHandler.mongooseFail(next));
 }
