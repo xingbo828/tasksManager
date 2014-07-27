@@ -159,7 +159,7 @@ exports.getTaskers = function(req, res, next) {
 exports.filter = function(req, res, next) {
     var filterCategory = Category.find({
         active: true,
-        name: new RegExp(".*" + req.query.query + ".*")
+        name: new RegExp(".*" + req.query.query + ".*", 'i')
     }).exec();
     var filterTaskers = function(data) {
         var categories = data[0];
