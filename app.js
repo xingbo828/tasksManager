@@ -34,6 +34,16 @@
         }
     });
     var app = express();
+var allowCrossDomain = function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "http://medley-skeipp.codio.io:3000");
+  res.header("Access-Control-Allow-Headers", "Content-Type, X-Requested-With, Authorization");
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  next();
+};
+
+app.use(allowCrossDomain);
+
     var passport = require('./config/passport');
     require('./config/express')(app, passport, config);
     require('./config/routes')(app);
