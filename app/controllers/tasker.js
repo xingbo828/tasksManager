@@ -110,9 +110,9 @@ exports.deleteTasker = function(req, res, next) {
 };
 exports.getTasker = function(req, res, next) {
     var id = req.params.id;
-    var userPromise = User.find({
+    var userPromise = User.findOne({
         _id: new ObjectId(id)
-    }).lean().select('_tasker nickName, email').populate({
+    }).lean().select('_tasker nickName email').populate({
         path: '_tasker',
         match: {
             status: {
@@ -164,17 +164,16 @@ exports.filter = function(req, res, next) {
     var filterTaskers = function(data) {
         var categories = data[0];
         var taskers = data[1];
-        if(categories.length === 0 || taskers.length === 0) {
-            throw errUtil.newFailedError("Can't find any tasker", 200);
+        if(categories.length === 0) {
+            return {taskers: [], categories: []};
         }
         var result = {};
+
         result.taskers = taskers.filter(function(element) {
             if(!element._tasker){
                 return false;
             }
             return element._tasker.capableTask.some(function(task) {
-                console.log(categories[0]);
-                console.log(task);
                 return task._categoryId._id.equals(categories[0]._id);
             });
         });

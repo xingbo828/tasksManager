@@ -27,7 +27,7 @@ module.exports = function (app) {
     app.get('/tasker/filter', tasker.filter, middleWares.sendJson);
     app.post('/tasker', middleWares.ensureAuthenticated(), tasker.addTasker, middleWares.sendJson);
     app.put('/tasker', middleWares.ensureAuthenticated(constants.USER_TYPE.TASKER), tasker.updateTasker, middleWares.sendJson);
-    app.get('/tasker/:id', middleWares.ensureAuthenticated(), middleWares.readCache, tasker.getTasker, middleWares.sendJson);
+    app.get('/tasker/:id', middleWares.readCache, tasker.getTasker, middleWares.sendJson);
     app.get('/tasker', middleWares.ensureAuthenticated(), middleWares.readCache, tasker.getTaskers, middleWares.sendJson);
     app.delete('/tasker', middleWares.ensureAuthenticated(), tasker.deleteTasker, middleWares.sendJson);
     
