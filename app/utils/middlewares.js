@@ -5,14 +5,14 @@ exports.ensureAuthenticated = function(roles) {
     return function(req, res, next) {
         if(req.isAuthenticated()) {
             if( !! roles && roles > req.user.userType) {
-                var error = new Error(4012);
-                error.status = constants.UNAUTHORIZED_STATUS_CODE;
+                var error = new Error(constants.FORBIDDEN_STATUS_CODE);
+                error.status = constants.FORBIDDEN_STATUS_CODE;
                 return next(error);
             }
             // all user types can access if role is empty
             return next();
         }
-        var error = new Error(4011);
+        var error = new Error(constants.UNAUTHORIZED_STATUS_CODE);
         error.status = constants.UNAUTHORIZED_STATUS_CODE;
         return next(error);
     };
