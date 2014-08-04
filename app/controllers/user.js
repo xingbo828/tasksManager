@@ -13,10 +13,10 @@ exports.add = function(req, res, next) {
     var confirmPassword = req.body.confirmPassword;
     if( !! confirmPassword) {
         if(confirmPassword !== password) {
-            return next(errUtil.newFailedError('password does not match', 400));
+            return next(errUtil.newFailedError('password does not match'));
         }
     } else {
-        return next(errUtil.newFailedError('missing confirm password', 400));
+        return next(errUtil.newFailedError('missing confirm password'));
     }
     var newUser = new User({
         email: email,
@@ -25,7 +25,6 @@ exports.add = function(req, res, next) {
     });
     newUser.save(function(err) {
         if(err) {
-            console.log(err.name);
             err.status = constants.FAIL_STATUS_CODE;
             err.type = constants.ERROR_TYPE_MONGOOSE;
             return next(err);
@@ -73,7 +72,7 @@ exports._getUser = function(id) {
     }).exec();
     var populateCategory = function(user) {
         if(!user) {
-            throw errUtil.newFailedError('No such user', 200);
+            throw errUtil.newFailedError('No such tasker');
         }
         return Category.populate(user, {
             path: '_tasker.capableTask._categoryId'

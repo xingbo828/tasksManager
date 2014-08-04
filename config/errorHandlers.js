@@ -15,16 +15,11 @@ module.exports = function(app) {
     var clientErrorHandler = function clientErrorHandler(err, req, res, next) {
         if([constants.FAIL_STATUS_CODE].indexOf(err.status) >= 0) {
             var httpErrCode = 500;
-            if(!!err.httpErrCode){
-                httpErrCode = err.httpErrCode;
-            }
             var errorToReturn = {
                 status: err.status
             };
             if(typeof err.name !== 'undefined' && err.name !== "Error") {
-                if(err.name === constants.ERROR_TYPE_MONGO) {
-                    errorToReturn.code = err.code;
-                } else if(err.type === constants.ERROR_TYPE_MONGOOSE) {
+                if(err.type === constants.ERROR_TYPE_MONGOOSE) {
                     errorToReturn.message = err.message;
                     if( !! err.errors) {
                         switch(err.name) {
@@ -42,6 +37,8 @@ module.exports = function(app) {
                                 break;
                         }
                     }
+                }else if(err.name === constants.ERROR_TYPE_MONGO) {
+                    errorToReturn.code = err.code;
                 }
             } else {
                 errorToReturn.message = err.message;
