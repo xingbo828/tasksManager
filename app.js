@@ -34,6 +34,9 @@
         }
     });
     var app = express();
+    if((process.env.NODE_ENV || 'development') === 'development'){
+        require('./config/developmentEnv')(app);
+    }
     var passport = require('./config/passport');
     require('./config/express')(app, passport, config);
     require('./config/routes')(app);
