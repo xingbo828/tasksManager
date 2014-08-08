@@ -14,10 +14,8 @@ module.exports = function(app) {
     };
     var clientErrorHandler = function clientErrorHandler(err, req, res, next) {
         if([constants.FAIL_STATUS_CODE].indexOf(err.status) >= 0) {
-            var httpErrCode = 500;
-            var errorToReturn = {
-                status: err.status
-            };
+            var httpErrCode = err.status || 500;
+            var errorToReturn = {};
             if(typeof err.name !== 'undefined' && err.name !== "Error") {
                 if(err.type === constants.ERROR_TYPE_MONGOOSE) {
                     errorToReturn.message = err.message;
@@ -44,8 +42,8 @@ module.exports = function(app) {
                 errorToReturn.message = err.message;
             }
             res.json(httpErrCode, errorToReturn);
-        } else if(constants.UNAUTHORIZED_STATUS_CODE === err.status) {
-            res.send(401, err.message);
+        } else if(constants.UNAUTHORIZED_STATUS_CODE === err.status || constants.FORBIDDEN_STATUS_CODE === err.status) {
+            res.send(err.status, err.message);
         } else {
             next(err);
         }
