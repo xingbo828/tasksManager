@@ -18,7 +18,7 @@ var _saveOrUpdateTask = function(req, res, next, cb) {
     //validations
     if (!!taskDoneDate && !moment(taskDoneDate).isValid()) {
         //TODO :: Add seconds to the constants file  || moment(taskDoneDate).unix() <= moment().add("seconds", 60*60*2).unix()
-        return next(errUtil.newFailedError('Invalid date'));
+        return next(errUtil.newFailedError('Invalid date', 400));
     }
     var config = (function() {
         var temp = {
@@ -64,7 +64,7 @@ exports.addTask = function(req, res, next) {
 exports.updateTask = function(req, res, next) {
     var taskId = req.body.taskId;
     if (!taskId) {
-        return next(errUtil.newFailedError('Unable to find task ID'));
+        return next(errUtil.newFailedError('Unable to find task ID', 400));
     }
     _saveOrUpdateTask(req, res, next, function(config) {
         promise = Task.findOneAndUpdate({

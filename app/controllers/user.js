@@ -25,7 +25,6 @@ exports.add = function(req, res, next) {
     });
     newUser.save(function(err) {
         if(err) {
-            console.log(err.name);
             err.status = constants.FAIL_STATUS_CODE;
             err.type = constants.ERROR_TYPE_MONGOOSE;
             return next(err);
